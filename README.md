@@ -30,9 +30,7 @@ The following instructions are primarily intended for Mac/Linux, but they should
 
 	```pip install -r requirements.txt```
 
-9. When you are finished and wish to exit the virtualenv, exit by the command:
-
-    ```deactivate```
+9. When you are finished and wish to exit the virtualenv, exit by the command: ```deactivate```
 
 
 ## External Links
