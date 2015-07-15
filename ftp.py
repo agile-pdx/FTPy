@@ -5,9 +5,15 @@ import pysftp
 parser = argparse.ArgumentParser()
 parser.add_argument('-url', '--url')
 parser.add_argument('-u', '--username')
-parser.add_argument('-p', '--password')
 args = parser.parse_args()
+
+#Avoid getting password from command-line argument for enhanced security
+secure_password = raw_input("Enter your password: ")
 
 print "Attempting to connect to " + args.url + " as '" + args.username + "'..."
 
-#TO DO: Add code to connect to server
+#Establish SFTP connection
+sftp = pysftp.Connection(args.url, username=args.username, password=secure_password)
+print "Successfully connected to " + args.url
+print sftp.listdir()
+sftp.close()
