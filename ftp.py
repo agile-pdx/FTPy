@@ -12,8 +12,18 @@ secure_password = raw_input("Enter your password: ")
 
 print "Attempting to connect to " + args.url + " as '" + args.username + "'..."
 
-#Establish SFTP connection
-sftp = pysftp.Connection(args.url, username=args.username, password=secure_password)
-print "Successfully connected to " + args.url
-print sftp.listdir()
-sftp.close()
+#Establish SFTP connection, if connection fails, raise exception
+try:
+    sftp = pysftp.Connection(args.url, username=args.username, password=secure_password)
+except pysftp.ConnectionException:
+    print "Unsuccessful attempt to connect!"
+except pysftp.AuthenticationException:
+    print "Authenication failed"
+except pysftp.CredentialException:
+    print "Credentials failed"
+except pysftp.SSHException:
+    print "SSH Exception"
+else:
+    print "Successfully connected to " + args.url
+    print sftp.listdir()                             
+    sftp.close()
