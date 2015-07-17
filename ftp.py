@@ -5,7 +5,6 @@ import pysftp
 parser = argparse.ArgumentParser()
 parser.add_argument('-url', '--url')
 parser.add_argument('-u', '--username')
-parser.add_argument('-h', '--help')
 args = parser.parse_args()
 
 #Avoid getting password from command-line argument for enhanced security
