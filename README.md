@@ -17,6 +17,7 @@ The following instructions are primarily intended for Mac/Linux, but they should
 5. Clone this repo.
 
 	```git clone git@github.com:agile-pdx/FTPy.git```
+	```git clone https://github.com/agile-pdx/FTPy.git```
 
 6. Create your virtual environment. This will isolate the project from any other python projects you may have running on your system.
 
@@ -28,7 +29,7 @@ The following instructions are primarily intended for Mac/Linux, but they should
 
 8. Install dependencies:
 
-	```pip install -r requirements.txt```
+	```[sudo] pip install -r requirements.txt```
 
 9. When you are finished and wish to exit the virtualenv, exit by the command: ```deactivate```
 
