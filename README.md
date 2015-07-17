@@ -17,6 +17,7 @@ The following instructions are primarily intended for Mac/Linux, but they should
 5. Clone this repo.
 
 	```git clone git@github.com:agile-pdx/FTPy.git```
+	
 	```git clone https://github.com/agile-pdx/FTPy.git```
 
 6. Create your virtual environment. This will isolate the project from any other python projects you may have running on your system.
