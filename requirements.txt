@@ -1,4 +1,6 @@
 ecdsa==0.13
 paramiko==1.15.2
+py==1.4.30
 pycrypto==2.6.1
 pysftp==0.2.8
+pytest==2.7.2
