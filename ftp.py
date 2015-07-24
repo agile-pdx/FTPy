@@ -25,5 +25,27 @@ except pysftp.SSHException:
     print "SSH Exception"
 else:
     print "Successfully connected to " + args.url
-    print sftp.listdir()                             
-    sftp.close()
+    print sftp.listdir()
+
+input_command = ""
+#While loop to get user commands, which will be 1 character long and start
+#with a -, and args that follow
+while input_command != '-q':
+    input = raw_input("Enter a command: ")
+    input_list = []
+    input_list = input.split(" ", 1)
+    #Checks if command and arg both present, command has - and is length of 2
+    if len(input_list) > 1 and len(input_list[0]) == 2 and input_list[0].startswith("-"):
+        input_command = input_list[0]
+        input_arg = input_list[1]
+        print input_command #Just for testing
+        print input_arg # Just for testing
+    else:
+        input_command = input_list[0] # To allow -q to quit with no arg
+        print "invalid entry"
+        print "Usage: -command(command = single character) arg"
+
+#Add functions for various tasks
+    
+    
+sftp.close()
