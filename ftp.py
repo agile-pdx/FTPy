@@ -51,6 +51,8 @@ def main():
 def action(command, arg, sftp):
     if command == "-l":
         list_dir(sftp)
+    if command == "-g":
+       get_file(sftp, arg)
     # add other commands, or change to switch statements
 
 def list_dir(sftp):
@@ -67,14 +69,19 @@ def list_dir(sftp):
     for i in range(0, len(d_list)):
         
         print d_list[i],
-
     print "\n" + "\n" + "Files:"   
     for i in range(0, len(f_list)):
         
         print f_list[i],
-    
     print "\n"
-    
+
+def get_file(sftp, arg):
+    if sftp.isfile(arg):
+       print "is file"
+       #Add get() function
+    else:
+       print "That file does not exist"
+       
 #sftp.close()
             
 if __name__ == '__main__': main()
