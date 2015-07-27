@@ -46,6 +46,7 @@ def main():
             input_command = input_list[0] # To allow -q to quit with no arg
             print "invalid entry"
             print "Usage: -command(command = single character) arg"
+    print "Exiting program...Goodbye!"
             
 #Add other command functions here
 def action(command, arg, sftp):
