@@ -5,8 +5,8 @@ import getpass
 def main():
     #Grab user command-line input
     parser = argparse.ArgumentParser()
-    parser.add_argument('-url', '--url')
-    parser.add_argument('-u', '--username')
+    parser.add_argument('-url', '--url',type = str, help = 'SFTP server URL (linuxlab.cs.pdx.edu for PSU)')
+    parser.add_argument('-u', '--username',type = str,  help = 'Desired username (Use Odin login for PSU)')
     args = parser.parse_args()
 
     #Set username and server address if they have yet to be set.
