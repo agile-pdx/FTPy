@@ -104,11 +104,12 @@ def list_dir(sftp):
     print "\n"
 
 def get_file(sftp, arg):
+    #TODO: Add ability to get multiple files
     if sftp.isfile(arg):
-       print "is file"
-       #Add get() function
+        print "is file"
+        sftp.get(arg)
     else:
-       print "That file does not exist"
-       
+        print "That file does not exist"
+
             
 if __name__ == '__main__': main()
