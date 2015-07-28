@@ -44,7 +44,7 @@ def main():
         #Checks if command and arg both present, command has - and is length of 2
         if len(input_list) >= 1 and len(input_list[0]) == 2 and input_list[0].startswith("-"):
             input_command = input_list[0]
-            if len(input_list)>1:
+            if len(input_list) > 1:
             	input_arg = input_list[1]
             else:
                 input_arg = ""
@@ -63,12 +63,11 @@ def main():
 def action(command, arg, sftp):
     if command == "-l":
         list_dir(sftp)
-    if command == "-g":
-       get_file(sftp, arg)
-    if command == "-h":
-	list_commands()
-    if command == "-q":
-        
+    elif command == "-g":
+        get_file(sftp, arg)
+    elif command == "-h":
+	    list_commands()
+    elif command == "-q":
         print "Closing connection."
         return
     else: 
@@ -78,7 +77,11 @@ def action(command, arg, sftp):
     # add other commands, or change to switch statements
 
 def list_commands():
-    print "Here is a list of available commands\n -l \t list directories\n -g \t get file \n -h \t help\n -q \t quit and log off"
+    print "Here is a list of available commands\n " \
+          "-l \t list directories\n " \
+          "-g \t get file \n " \
+          "-h \t help\n " \
+          "-q \t quit and log off"
 
 def list_dir(sftp):
     dir = sftp.listdir()
