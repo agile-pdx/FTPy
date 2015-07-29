@@ -70,7 +70,7 @@ def action(command, arg, sftp):
     elif command == "-q":
         print "Closing connection."
         return
-    else: 
+    else:
         print "invalid entry"
         print "For a list of available functions enter -h"
 
@@ -97,19 +97,22 @@ def list_dir(sftp):
     for i in range(0, len(d_list)):
         
         print d_list[i],
-    print "\n" + "\n" + "Files:"   
+    print "\n" + "\n" + "Files:"
     for i in range(0, len(f_list)):
    
         print f_list[i],
     print "\n"
+    return (d_list, f_list)
 
 def get_file(sftp, arg):
     #TODO: Add ability to get multiple files
     if sftp.isfile(arg):
         print "is file"
         sftp.get(arg)
+        return True
     else:
         print "That file does not exist"
+        return False
 
             
 if __name__ == '__main__': main()
