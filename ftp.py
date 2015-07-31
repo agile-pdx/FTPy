@@ -112,18 +112,34 @@ def list_dir(sftp):
     return (d_list, f_list)
 
 def get_file(sftp, arg):
-    #TODO: Add ability to get multiple files
-    if sftp.isfile(arg):
-        print "is file"
-        try:#Not sure if the try/except is really the way to determine if the file arrived
-            sftp.get(arg)
-            print "File: " + arg + " downloaded correctly"
-            return True
-        except pysftp.IOError:
-            print "Error getting file"
-    else:
-        print "That file does not exist"
-        return False
+    found_all_files = True
+    download_queue = []
+    missing_files = []
+    arg_files = arg.rsplit()
+
+    #Check for missing files
+    for i in range(0, len(arg_files)):
+        if not sftp.isfile(arg_files[i]):
+            missing_files.append(arg_files[i])
+            found_all_files = False
+        else:
+            download_queue.append(arg_files[i])
+
+    #Prompt to continue with transfer if files are missing
+    if found_all_files == False:
+        print "The following files were not found \n"
+        for i in range(0, len(missing_files)):
+            print missing_files[i],
+        print "\n"
+        input = raw_input("Would you like to download all existing files anyway (Y/N)? ")
+        if input.upper() == 'N':
+            return
+
+    #Transfer all available files
+    for i in range(0, len(download_queue)):
+        sftp.get(download_queue[i])
+    print "Files downloaded successfully"
+
 def change_dir(sftp, arg):
     try:
         sftp.cwd(arg)
