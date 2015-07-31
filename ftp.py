@@ -67,6 +67,8 @@ def action(command, arg, sftp):
         get_file(sftp, arg)
     elif command == "-h":
 	    list_commands()
+    elif command == "-c":
+        change_dir(sftp, arg)
     elif command == "-q":
         print "Closing connection."
         return
@@ -81,7 +83,8 @@ def list_commands():
           "-l \t list directories\n " \
           "-g \t get file \n " \
           "-h \t help\n " \
-          "-q \t quit and log off"
+          "-q \t quit and log off" \
+          "-c \t change directory"
 
 def list_dir(sftp):
     dir = sftp.listdir()
@@ -108,11 +111,20 @@ def get_file(sftp, arg):
     #TODO: Add ability to get multiple files
     if sftp.isfile(arg):
         print "is file"
-        sftp.get(arg)
-        return True
+        try:#Not sure if the try/except is really the way to determine if the file arrived
+            sftp.get(arg)
+            print "File: " + arg + " downloaded correctly"
+            return True
+        except pysftp.IOError:
+            print "Error getting file"
     else:
         print "That file does not exist"
         return False
-
+def change_dir(sftp, arg):
+    try:
+        sftp.cwd(arg)
+        print "Directory successfully changed to " + arg
+    except IOError:
+        print "Path does not exist"
             
 if __name__ == '__main__': main()
