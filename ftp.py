@@ -1,6 +1,7 @@
 import argparse
 import pysftp
 import getpass
+import os
 
 def main():
     #Grab user command-line input
@@ -69,6 +70,8 @@ def action(command, arg, sftp):
 	    list_commands()
     elif command == "-c":
         change_dir(sftp, arg)
+    elif command == "-y":
+        list_local()
     elif command == "-q":
         print "Closing connection."
         return
@@ -84,7 +87,8 @@ def list_commands():
           "-g \t get file \n " \
           "-h \t help\n " \
           "-q \t quit and log off" \
-          "-c \t change directory"
+          "-c \t change directory" \
+          "-y \t list local files"
 
 def list_dir(sftp):
     dir = sftp.listdir()
@@ -126,5 +130,21 @@ def change_dir(sftp, arg):
         print "Directory successfully changed to " + arg
     except IOError:
         print "Path does not exist"
+
+def list_local():
+    dir = os.listdir('.')
+    f_list = []
+    d_list = []
+
+    for i in dir:
+        if os.path.isfile(i):
+            f_list.append(i)
+        else:
+            d_list.append(i)
+            
+    print "Files: "
+    print f_list
+    print "Directories: "
+    print d_list
             
 if __name__ == '__main__': main()
