@@ -49,9 +49,8 @@ def main():
             	input_arg = input_list[1]
             else:
                 input_arg = ""
-            #print input_command #Just for testing
-            #print input_arg # Just for testing
-            action(input_command, input_arg, sftp)#To use user command
+	    #capture the returned command in order to loop
+            input_command = action(input_command, input_arg, sftp)#To use user command
         else:
             input_command = input_list[0] # To allow -q to quit with no arg
             print "invalid entry"
@@ -72,14 +71,29 @@ def action(command, arg, sftp):
         change_dir(sftp, arg)
     elif command == "-y":
         list_local()
+
+    #prompt user. If the user does not want to logout, return a dummy character to be captured.
+    #the character serves to continue the while loop that asks for user input.
     elif command == "-q":
-        print "Closing connection."
-        return
+	logout_resposne = ""
+	logout_response = raw_input("Are you sure that you want to logout? (Y/N) ")
+	while (logout_response !='Y' or logout_response!='N'):
+		logout_response = logout_response[0].upper()
+		if logout_response == "Y":
+        		print "Closing connection."
+			return
+		elif logout_response == "N":
+			
+			return "-a"
+		else:
+			"invalid input please type Y to log out or N to stay retain the connection."
+	
     else:
         print "invalid entry"
         print "For a list of available functions enter -h"
 
     # add other commands, or change to switch statements
+
 
 def list_commands():
     print "Here is a list of available commands\n " \
