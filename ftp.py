@@ -164,12 +164,10 @@ def get_file(sftp, arg):
 	if sftp.isfile(download_queue[i]):
             sftp.get(download_queue[i])
         else:
-	    os.makedirs(download_queue[i])
-	    os.chdir(download_queue[i])
-            sftp.get_d(download_queue[i], os.getcwd())
-	    os.chdir("..")
+            sftp.get_r(download_queue[i], os.getcwd())
 	
 	print "download of " + download_queue[i] + "completed"
+    os.chdir("..")
     print "Download process has been completed."
 
 def change_dir(sftp, arg):
