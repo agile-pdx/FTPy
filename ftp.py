@@ -81,7 +81,7 @@ def action(command, arg, sftp):
 		logout_response = logout_response[0].upper()
 		if logout_response == "Y":
         		print "Closing connection."
-			return
+			return "-q"
 		elif logout_response == "N":
 			
 			return "-a"
@@ -126,33 +126,51 @@ def list_dir(sftp):
     return (d_list, f_list)
 
 def get_file(sftp, arg):
-    found_all_files = True
+    found_all_items = True
     download_queue = []
-    missing_files = []
-    arg_files = arg.rsplit()
+    missing_items = []
+    arg_items = arg.rsplit()
+
 
     #Check for missing files
-    for i in range(0, len(arg_files)):
-        if not sftp.isfile(arg_files[i]):
-            missing_files.append(arg_files[i])
-            found_all_files = False
+    for i in range(0, len(arg_items)):
+	if sftp.isfile(arg_items[i]) or sftp.isdir(arg_items[i]):
+            download_queue.append(arg_items[i])
         else:
-            download_queue.append(arg_files[i])
+            missing_items.append(arg_items[i])
+            found_all_items = False
 
     #Prompt to continue with transfer if files are missing
-    if found_all_files == False:
-        print "The following files were not found \n"
-        for i in range(0, len(missing_files)):
-            print missing_files[i],
+    if found_all_items == False:
+        print "The following items were not found \n"
+        for i in range(0, len(missing_items)):
+            print missing_items[i],
         print "\n"
-        input = raw_input("Would you like to download all existing files anyway (Y/N)? ")
+        input = raw_input("Would you like to download all existing items anyway (Y/N)? ")
         if input.upper() == 'N':
             return
 
-    #Transfer all available files
+    #create a download folder if it does not exist and go to that directory for download.
+    if not os.path.isdir("downloads"):
+	    os.makedirs("downloads")
+	    if os.path.isdir("downloads"):
+	       print "Downloads directory has been created within your current directory"
+    os.chdir("downloads")
+	    
+    
+    #Transfer all available files -- could not figure out how to use get_r... getting weird errors for files
     for i in range(0, len(download_queue)):
-        sftp.get(download_queue[i])
-    print "Files downloaded successfully"
+	print "downloading " + download_queue[i]
+	if sftp.isfile(download_queue[i]):
+            sftp.get(download_queue[i])
+        else:
+	    os.makedirs(download_queue[i])
+	    os.chdir(download_queue[i])
+            sftp.get_d(download_queue[i], os.getcwd())
+	    os.chdir("..")
+	
+	print "download of " + download_queue[i] + "completed"
+    print "Download process has been completed."
 
 def change_dir(sftp, arg):
     try:
