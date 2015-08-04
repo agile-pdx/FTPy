@@ -100,9 +100,9 @@ def list_commands():
           "-l \t list directories\n " \
           "-g \t get file \n " \
           "-h \t help\n " \
-          "-q \t quit and log off" \
-          "-c \t change directory" \
-          "-y \t list local files"
+          "-q \t quit and log off\n " \
+          "-c \t change directory\n " \
+          "-y \t list local files\n "
 
 def list_dir(sftp):
     dir = sftp.listdir()
