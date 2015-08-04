@@ -79,6 +79,8 @@ def action(command, arg, sftp):
             get_file(sftp, arg)
         else:
             print "Usage: -g FILENAME"
+    elif command == "-p":
+    	put_file(sftp, arg)
     elif command == "-h":
 	    list_commands()
     elif command == "-c":
@@ -111,7 +113,8 @@ def logout():
 def list_commands():
     print "Here is a list of available commands\n " \
           "-l \t list directories\n " \
-          "-g \t get file \n " \
+          "-g \t get file \n "
+          "-p \t put file (in current remote directory) \n "\
           "-h \t help\n " \
           "-q \t quit and log off\n " \
           "-c \t change directory\n " \
@@ -207,5 +210,40 @@ def list_local():
     print f_list
     print "Directories: "
     print d_list
+    
+def put_file(sftp, arg):
+
+    print "Testing put file, arg was: " + arg
+
+    found_all_items = True
+    upload_queue = []
+    missing_items = []
+    arg_items = arg.rsplit()
+
+    #Check for missing files
+    for i in range(0, len(arg_items)):
+        if os.path.isfile(arg_items[i]) or os.path.isdir(arg_items[i]):
+            upload_queue.append(arg_items[i])
+        else:
+            missing_items.append(arg_items[i])
+            found_all_items = False
+
+    #Prompt to continue with transfer if files are missing
+    if found_all_items == False:
+        print "The following items were not found \n"
+        for i in range(0, len(missing_items)):
+            print missing_items[i],
+        print "\n"
+        input = raw_input("Would you like to upload all existing items anyway (Y/N)? ")
+        if input.upper() == 'N':
+            return
+
+    #Transfer all available files
+    for i in range(0, len(upload_queue)):
+        print "uploading " + upload_queue[i]
+        if os.path.isfile(upload_queue[i]):
+            sftp.put(upload_queue[i])
+        print "upload of " + upload_queue[i] + "completed"
+    print "upload process has been completed."
             
 if __name__ == '__main__': main()
