@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import argparse
 import pysftp
 import getpass
@@ -5,7 +7,7 @@ import os
 
 def main():
     #Grab user command-line input
-    login()
+    sftp = login()
 
     input_command = ""
     #While loop to get user commands, which will be 1 character long and start
@@ -49,7 +51,10 @@ def login():
 
     #Establish SFTP connection, if connection fails, raise exception
     try:
-        sftp = pysftp.Connection(args.url, username=args.username, password=secure_password)
+        sftp =  pysftp.Connection(args.url, username=args.username, password=secure_password)
+        print "Successfully connected to " + args.url + '\n'
+        print "Usage: -command(command = single character) arg or enter -h for help"
+        return sftp
     except pysftp.ConnectionException:
         print "Unsuccessful attempt to connect!"
         login()
@@ -63,8 +68,7 @@ def login():
         print "SSH Exception"
         login()
     else:
-        print "Successfully connected to " + args.url
-        print "\nUsage: -command(command = single character) arg or enter -h for help"
+        login()
 
 #Add other command functions here
 def action(command, arg, sftp):
