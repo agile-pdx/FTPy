@@ -75,7 +75,10 @@ def action(command, arg, sftp):
     if command == "-l":
         list_dir(sftp)
     elif command == "-g":
-        get_file(sftp, arg)
+        if arg:
+            get_file(sftp, arg)
+        else:
+            print "Usage: -g FILENAME"
     elif command == "-h":
 	    list_commands()
     elif command == "-c":
@@ -86,7 +89,7 @@ def action(command, arg, sftp):
     #prompt user. If the user does not want to logout, return a dummy character to be captured.
     #the character serves to continue the while loop that asks for user input.
     elif command == "-q":
-    	return logout()
+        return logout()
 	
     else:
         print "invalid entry"
@@ -175,7 +178,7 @@ def get_file(sftp, arg):
         else:
             sftp.get_r(download_queue[i], os.getcwd())
 	
-	print "download of " + download_queue[i] + "completed"
+	print "download of " + download_queue[i] + " completed"
     os.chdir("..")
     print "Download process has been completed."
 
