@@ -146,7 +146,7 @@ def get_file(sftp, arg):
 
     #Check for missing files
     for i in range(0, len(arg_items)):
-	if sftp.isfile(arg_items[i]) or sftp.isdir(arg_items[i]):
+        if sftp.isfile(arg_items[i]) or sftp.isdir(arg_items[i]):
             download_queue.append(arg_items[i])
         else:
             missing_items.append(arg_items[i])
@@ -157,9 +157,12 @@ def get_file(sftp, arg):
         print "The following items were not found \n"
         for i in range(0, len(missing_items)):
             print missing_items[i],
-        print "\n"
-        input = raw_input("Would you like to download all existing items anyway (Y/N)? ")
-        if input.upper() == 'N':
+            print "\n"
+        if len(missing_items) < len(arg_items):
+            input = raw_input("Would you like to download all existing items anyway (Y/N)? ")
+            if input.upper() == 'N':
+                return
+        else:
             return
 
     #create a download folder if it does not exist and go to that directory for download.
