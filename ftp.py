@@ -86,18 +86,7 @@ def action(command, arg, sftp):
     #prompt user. If the user does not want to logout, return a dummy character to be captured.
     #the character serves to continue the while loop that asks for user input.
     elif command == "-q":
-	logout_resposne = ""
-	logout_response = raw_input("Are you sure that you want to logout? (Y/N) ")
-	while (logout_response !='Y' or logout_response!='N'):
-		logout_response = logout_response[0].upper()
-		if logout_response == "Y":
-        		print "Closing connection."
-			return "-q"
-		elif logout_response == "N":
-			
-			return "-a"
-		else:
-			"invalid input please type Y to log out or N to stay retain the connection."
+    	return logout()
 	
     else:
         print "invalid entry"
@@ -105,6 +94,16 @@ def action(command, arg, sftp):
 
     # add other commands, or change to switch statements
 
+def logout():
+    logout_response = raw_input("Are you sure that you want to logout? (Y/N) ").upper()
+    if logout_response == "Y":
+        print "Closing connection."
+        return "-q"
+    elif logout_response == "N":
+        return "-a"
+    else:
+        "invalid input please type Y to log out or N to stay retain the connection."
+        logout()
 
 def list_commands():
     print "Here is a list of available commands\n " \
@@ -141,7 +140,6 @@ def get_file(sftp, arg):
     download_queue = []
     missing_items = []
     arg_items = arg.rsplit()
-
 
     #Check for missing files
     for i in range(0, len(arg_items)):
