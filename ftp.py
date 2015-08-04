@@ -113,7 +113,7 @@ def logout():
 def list_commands():
     print "Here is a list of available commands\n " \
           "-l \t list directories\n " \
-          "-g \t get file \n "
+          "-g \t get file \n " \
           "-p \t put file (in current remote directory) \n "\
           "-h \t help\n " \
           "-q \t quit and log off\n " \
