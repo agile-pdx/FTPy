@@ -26,7 +26,7 @@ def main():
         else:
             input_command = input_list[0] # To allow -q to quit with no arg
             print "invalid entry"
-            print "Usage: -command(command = single character) arg or enter -h for help"
+            print "Usage: Enter a command or enter -h for help."
 
 
     sftp.close()
@@ -50,7 +50,6 @@ def login():
     #Establish SFTP connection, if connection fails, raise exception
     try:
         sftp = pysftp.Connection(args.url, username=args.username, password=secure_password)
-        login()
     except pysftp.ConnectionException:
         print "Unsuccessful attempt to connect!"
         login()
@@ -65,6 +64,7 @@ def login():
         login()
     else:
         print "Successfully connected to " + args.url
+        print "\nUsage: -command(command = single character) arg or enter -h for help"
 
 #Add other command functions here
 def action(command, arg, sftp):
