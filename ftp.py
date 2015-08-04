@@ -5,6 +5,33 @@ import os
 
 def main():
     #Grab user command-line input
+    login()
+
+    input_command = ""
+    #While loop to get user commands, which will be 1 character long and start
+    #with a -, and args that follow.
+    while input_command != '-q':
+        input = raw_input("Enter a command: ")
+        input_list = []
+        input_list = input.split(" ", 1)
+        #Checks if command and arg both present, command has - and is length of 2
+        if len(input_list) >= 1 and len(input_list[0]) == 2 and input_list[0].startswith("-"):
+            input_command = input_list[0]
+            if len(input_list) > 1:
+                input_arg = input_list[1]
+            else:
+                input_arg = ""
+	    #capture the returned command in order to loop
+            input_command = action(input_command, input_arg, sftp)#To use user command
+        else:
+            input_command = input_list[0] # To allow -q to quit with no arg
+            print "invalid entry"
+            print "Usage: -command(command = single character) arg or enter -h for help"
+
+
+    sftp.close()
+
+def login():
     parser = argparse.ArgumentParser()
     parser.add_argument('-url', '--url',type = str, help = 'SFTP server URL (linuxlab.cs.pdx.edu for PSU)')
     parser.add_argument('-u', '--username',type = str,  help = 'Desired username (Use Odin login for PSU)')
@@ -23,41 +50,21 @@ def main():
     #Establish SFTP connection, if connection fails, raise exception
     try:
         sftp = pysftp.Connection(args.url, username=args.username, password=secure_password)
+        login()
     except pysftp.ConnectionException:
         print "Unsuccessful attempt to connect!"
+        login()
     except pysftp.AuthenticationException:
         print "Authenication failed"
+        login()
     except pysftp.CredentialException:
         print "Credentials failed"
+        login()
     except pysftp.SSHException:
         print "SSH Exception"
+        login()
     else:
         print "Successfully connected to " + args.url
-        #print sftp.listdir()
-
-    input_command = ""
-    #While loop to get user commands, which will be 1 character long and start
-    #with a -, and args that follow.
-    while input_command != '-q':
-        input = raw_input("Enter a command: ")
-        input_list = []
-        input_list = input.split(" ", 1)
-        #Checks if command and arg both present, command has - and is length of 2
-        if len(input_list) >= 1 and len(input_list[0]) == 2 and input_list[0].startswith("-"):
-            input_command = input_list[0]
-            if len(input_list) > 1:
-            	input_arg = input_list[1]
-            else:
-                input_arg = ""
-	    #capture the returned command in order to loop
-            input_command = action(input_command, input_arg, sftp)#To use user command
-        else:
-            input_command = input_list[0] # To allow -q to quit with no arg
-            print "invalid entry"
-            print "Usage: -command(command = single character) arg or enter -h for help"
-
-            
-    sftp.close()
 
 #Add other command functions here
 def action(command, arg, sftp):
