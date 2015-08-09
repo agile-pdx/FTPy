@@ -5,7 +5,20 @@ import pysftp
 import getpass
 import os
 
+
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
 def main():
+    os.chdir(os.path.expanduser("~"))
+
     #Grab user command-line input
     sftp = login()
 
@@ -13,7 +26,7 @@ def main():
     #While loop to get user commands, which will be 1 character long and start
     #with a -, and args that follow.
     while input_command != '-q':
-        input = raw_input("Enter a command: ")
+        input = raw_input("\nEnter a command: ")
         input_list = []
         input_list = input.split(" ", 1)
         #Checks if command and arg both present, command has - and is length of 2
@@ -87,6 +100,8 @@ def action(command, arg, sftp):
         change_dir(sftp, arg)
     elif command == "-y":
         list_local()
+    elif command == "-d":
+        change_local_dir(arg)
 
     #prompt user. If the user does not want to logout, return a dummy character to be captured.
     #the character serves to continue the while loop that asks for user input.
@@ -118,7 +133,8 @@ def list_commands():
           "-h \t help\n " \
           "-q \t quit and log off\n " \
           "-c \t change directory\n " \
-          "-y \t list local files\n "
+          "-y \t list local files\n " \
+          "-d \t change local dir\n "
 
 def list_dir(sftp):
     dir = sftp.listdir()
@@ -132,7 +148,7 @@ def list_dir(sftp):
 
     print "Directories:"
     for i in range(0, len(d_list)):
-        
+
         print d_list[i],
     print "\n" + "\n" + "Files:"
     for i in range(0, len(f_list)):
@@ -168,14 +184,6 @@ def get_file(sftp, arg):
         else:
             return
 
-    #create a download folder if it does not exist and go to that directory for download.
-    if not os.path.isdir("downloads"):
-	    os.makedirs("downloads")
-	    if os.path.isdir("downloads"):
-	       print "Downloads directory has been created within your current directory"
-    os.chdir("downloads")
-	    
-    
     #Transfer all available files -- could not figure out how to use get_r... getting weird errors for files
     for i in range(0, len(download_queue)):
 	print "downloading " + download_queue[i]
@@ -185,7 +193,6 @@ def get_file(sftp, arg):
             sftp.get_r(download_queue[i], os.getcwd())
 	
 	print "download of " + download_queue[i] + " completed"
-    os.chdir("..")
     print "Download process has been completed."
 
 def change_dir(sftp, arg):
@@ -205,10 +212,11 @@ def list_local():
             f_list.append(i)
         else:
             d_list.append(i)
-            
-    print "Files: "
+
+    print bcolors.WARNING +"\nCurrent Directory: " + bcolors.ENDC +os.path.abspath(".")
+    print bcolors.WARNING +"\nFiles: " + bcolors.ENDC
     print f_list
-    print "Directories: "
+    print bcolors.WARNING +"\nDirectories: " + bcolors.ENDC
     print d_list
     
 def put_file(sftp, arg):
@@ -245,5 +253,33 @@ def put_file(sftp, arg):
             sftp.put(upload_queue[i])
         print "upload of " + upload_queue[i] + "completed"
     print "upload process has been completed."
-            
+
+def change_local_dir(arg):
+    args = arg.split(" ")
+    if len(args) > 1:
+        print bcolors.FAIL + "\nYeah... I can't be in " + str(len(args)) + " places at once. You should probably \njust enter 1 directory if you know what's good for you." + bcolors.ENDC
+        return
+
+    # If path exists, change local dir.
+    if os.path.exists(arg):
+        try:
+            os.chdir(arg)
+        except:
+            print "There was an error changing directories. Maybe you can be less careless next time? \n... Or maybe you're just not good at this computer thing?"
+    # Otherwise, determine if we should create or return.
+    else:
+        if arg == "":
+            return list_local()
+
+        input = raw_input(bcolors.WARNING + "\nThe path '" + arg + "' doesn't exist. Would you like to create it? (Y/N)? " + bcolors.ENDC)
+
+        if input.upper() == 'N':
+            print bcolors.WARNING + "Yeah, we thought you probably screwed up again." + bcolors.ENDC
+            return
+        else:
+            os.makedirs(arg)
+            os.chdir(arg)
+
+
 if __name__ == '__main__': main()
+
